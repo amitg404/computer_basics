@@ -20,6 +20,14 @@
             --card-bg: #ffffff;
             --shadow: 0 4px 12px rgba(0,0,0,0.05);
             --border-radius: 12px;
+            /* ADDED: Confetti Colors */
+            --confetti-color-1: #f94144;
+            --confetti-color-2: #f3722c;
+            --confetti-color-3: #f8961e;
+            --confetti-color-4: #f9c74f;
+            --confetti-color-5: #90be6d;
+            --confetti-color-6: #43aa8b;
+            --confetti-color-7: #577590;
         }
 
         /* ----- THEME: Dark ----- */
@@ -30,63 +38,47 @@
             --card-bg: #1e1e1e;
             --shadow: 0 4px 12px rgba(0,0,0,0.2);
             --stamina-bar-bg: #333;
+            /* ADDED: Dark Confetti Colors */
+            --confetti-color-1: #ff6b6b;
+            --confetti-color-2: #ffa07a;
+            --confetti-color-3: #ffd700;
+            --confetti-color-4: #f0e68c;
+            --confetti-color-5: #98fb98;
+            --confetti-color-6: #add8e6;
+            --confetti-color-7: #b0c4de;
         }
 
-        /* ----- THEME: Ocean ----- */
-        body.theme-ocean {
-            --primary-color: #005a9c;
-            --accent-color: #17a2b8;
-            --stamina-bar-color: #17a2b8;
-        }
-        body.theme-ocean.theme-dark { /* Dark mode adjustments */
-            --primary-color: #33a1b9;
-            --accent-color: #17a2b8;
-        }
-
-        /* ----- THEME: Sunset ----- */
-        body.theme-sunset {
-            --primary-color: #ff6600;
-            --accent-color: #e83e8c;
-            --stamina-bar-color: #ffc107;
-        }
-         body.theme-sunset.theme-dark { /* Dark mode adjustments */
-            --primary-color: #ff8533;
-            --accent-color: #f065a6;
-        }
-
-
-        /* ----- THEME: Forest (Unlockable) ----- */
-        body.theme-forest {
-            --primary-color: #2a682a;
-            --accent-color: #6f42c1;
-            --stamina-bar-color: #5a9c5a;
-        }
-        body.theme-forest.theme-dark { /* Dark mode adjustments */
-            --primary-color: #5a9c5a;
-            --accent-color: #8c68c1;
-        }
+        /* --- Color Themes --- */
+        body.theme-ocean { --primary-color: #005a9c; --accent-color: #17a2b8; --stamina-bar-color: #17a2b8; }
+        body.theme-ocean.theme-dark { --primary-color: #33a1b9; --accent-color: #17a2b8; }
+        body.theme-sunset { --primary-color: #ff6600; --accent-color: #e83e8c; --stamina-bar-color: #ffc107; }
+        body.theme-sunset.theme-dark { --primary-color: #ff8533; --accent-color: #f065a6; }
+        body.theme-forest { --primary-color: #2a682a; --accent-color: #6f42c1; --stamina-bar-color: #5a9c5a; }
+        body.theme-forest.theme-dark { --primary-color: #5a9c5a; --accent-color: #8c68c1; }
 
         /* ----- Base Setup ----- */
         * { box-sizing: border-box; margin: 0; padding: 0; }
+        html, body { height: 100%; overflow-x: hidden; } /* Ensure body takes full height for confetti */
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             background-color: var(--bg-color);
             color: var(--text-color);
             line-height: 1.6;
             transition: background-color 0.3s ease, color 0.3s ease;
+            position: relative; /* Needed for confetti positioning */
         }
         main { max-width: 800px; margin: 20px auto; padding: 0 20px; }
         h1, h2 { color: var(--primary-color); margin-bottom: 1rem; }
-        /* ----- Header & Stats ----- */
+        
+        /* --- Header --- */
         .header {
             display: flex; justify-content: space-between; align-items: center;
             padding: 20px; background-color: var(--card-bg); border-bottom: 2px solid var(--secondary-color);
             box-shadow: var(--shadow); position: sticky; top: 0; z-index: 100;
         }
-        /* ADDED: Link styling for title */
-        #home-title-link { text-decoration: none; color: inherit; } 
+        #home-title-link { text-decoration: none; color: inherit; cursor: pointer; } /* Added cursor */
         .header h1 { margin: 0; font-size: 1.5rem; }
-        .stats { display: flex; align-items: center; gap: 15px; } /* Reduced gap for button */
+        .stats { display: flex; align-items: center; gap: 15px; } 
         .xp-counter { font-size: 1.2rem; font-weight: bold; color: var(--accent-color); }
         .stamina-container {
             width: 150px; height: 24px; background-color: var(--stamina-bar-bg);
@@ -100,10 +92,14 @@
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
             font-size: 0.8rem; font-weight: bold; color: #fff; text-shadow: 1px 1px 2px rgba(0,0,0,0.4);
         }
+        
+        /* --- Views --- */
         .view {
             display: none; padding: 20px; background-color: var(--card-bg);
             border-radius: var(--border-radius); box-shadow: var(--shadow); margin-top: 20px;
         }
+        
+        /* --- Buttons --- */
         .btn {
             display: inline-block; background-color: var(--primary-color); color: var(--primary-text);
             padding: 12px 24px; font-size: 1rem; font-weight: bold; border: none;
@@ -112,13 +108,14 @@
         }
         .btn:hover { transform: translateY(-2px); filter: brightness(1.1); }
         .btn-secondary { background-color: var(--secondary-color); color: var(--text-color); }
-        /* ADDED: Icon button style */
         .btn-icon {
             background: none; border: 1px solid var(--secondary-color); color: var(--text-color);
             width: 36px; height: 36px; border-radius: 50%; font-size: 1.2rem; cursor: pointer;
             transition: background-color 0.2s ease, transform 0.2s ease; display: flex; align-items: center; justify-content: center;
         }
         .btn-icon:hover { background-color: var(--secondary-color); transform: scale(1.1); }
+        
+        /* --- Specific Views --- */
         .daily-fact-card {
             background-color: var(--secondary-color); padding: 20px; border-radius: var(--border-radius);
             margin-bottom: 20px; font-size: 1.1rem; border-left: 5px solid var(--primary-color);
@@ -133,7 +130,6 @@
             background-color: var(--card-bg); color: var(--text-color); border: 2px solid var(--secondary-color);
         }
         .module-btn.completed { border-color: var(--accent-color); background-color: #f0fff4; }
-        /* ADDED: Dark mode style */
         body.theme-dark .module-btn.completed { background-color: #223a22; border-color: var(--accent-color); }
         .module-btn .progress-bar {
             position: absolute; bottom: 0; left: 0; height: 6px;
@@ -152,7 +148,6 @@
         .option-btn:not(:disabled):hover { border-color: var(--primary-color); }
         .option-btn.correct { background-color: #d4edda; border-color: var(--accent-color); color: #155724; font-weight: bold; }
         .option-btn.incorrect { background-color: #f8d7da; border-color: var(--error-color); color: #721c24; font-weight: bold; }
-         /* ADDED: Dark mode styles */
         body.theme-dark .option-btn.correct { background-color: #1a4a2a; border-color: var(--accent-color); color: #d4edda; }
         body.theme-dark .option-btn.incorrect { background-color: #5a1c24; border-color: var(--error-color); color: #f8d7da; }
         .option-btn:disabled { cursor: not-allowed; opacity: 0.8; }
@@ -160,7 +155,6 @@
             display: none; margin-top: 20px; padding: 15px;
             border-radius: var(--border-radius); background-color: var(--secondary-color);
         }
-         /* ADDED: Feedback classes */
         #feedback-area.correct-feedback { background-color: #d4edda; color: #155724; }
         #feedback-area.incorrect-feedback { background-color: #f8d7da; color: #721c24; }
         body.theme-dark #feedback-area.correct-feedback { background-color: #1a4a2a; color: #d4edda; }
@@ -168,6 +162,8 @@
         #feedback-area strong { color: var(--error-color); }
         body.theme-dark #feedback-area strong { color: #f8d7da; } 
         #next-q-btn { display: none; margin-top: 20px; width: 100%; }
+        
+        /* --- Footer --- */
         footer { text-align: center; margin-top: 30px; padding: 20px; }
         .theme-selector { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
         .theme-btn {
@@ -184,12 +180,49 @@
             transform: translate(-50%, -50%); font-size: 1.2rem; color: white; text-shadow: 1px 1px 2px black;
         }
         .theme-btn.locked span { visibility: hidden; }
+
+        /* --- ADDED: First Welcome View Styles --- */
+        #first-welcome-view {
+            text-align: center;
+            padding: 40px 20px;
+        }
+        #first-welcome-view h2 {
+            font-size: 2.5rem;
+            animation: fadeInScale 1s ease-out forwards;
+        }
+        #first-welcome-view p {
+            font-size: 1.2rem;
+            margin: 20px 0 30px;
+            opacity: 0;
+            animation: fadeIn 1s ease-out 0.5s forwards;
+        }
+        #first-welcome-view .btn {
+             opacity: 0;
+             animation: fadeIn 1s ease-out 1s forwards;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+         @keyframes fadeInScale { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }
+
+        /* --- ADDED: Confetti Styles --- */
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            opacity: 0;
+            pointer-events: none; /* Make sure they don't block clicks */
+        }
+        @keyframes confetti-fall {
+            0% { transform: translateY(-100vh) rotateZ(0deg); opacity: 1; }
+            100% { transform: translateY(100vh) rotateZ(720deg); opacity: 0; }
+        }
+
     </style>
 </head>
 <body>
 
     <header class="header">
-         <a href="#" id="home-title-link" title="Go Home">
+        <a href="#" id="home-title-link" title="Go Home">
              <h1>Digital Explorer</h1>
         </a>
         <div class="stats">
@@ -205,6 +238,13 @@
     </header>
 
     <main>
+
+        <div id="first-welcome-view" class="view">
+            <h2>WELCOME ANANYA!!</h2>
+            <p>You are taking the first step towards greatness.</p>
+            <button id="start-exploring-btn" class="btn">Let's Explore!</button>
+        </div>
+
         <div id="home-view" class="view">
             <h2>Welcome Back, Explorer!</h2>
             <div class="daily-fact-card">
@@ -263,17 +303,120 @@
         // ---------------------------------------------------
 
         const dailyFacts = [
-            "The first computer mouse was made of wood!",
-            "A 'bug' in a computer was originally a real moth stuck in the machine.",
-            "The first computer programmer was a woman named Ada Lovelace.",
-            "You blink less when you're looking at a computer screen.",
-            "The 'Ctrl' + 'C' (Copy) and 'Ctrl' + 'V' (Paste) commands were invented by Larry Tesler.",
-            "A 'Firewall' is a digital barrier that protects a computer from dangers on the internet.",
-            "Wi-Fi doesn't stand for anything! It's just a catchy name made for marketing.",
-            "The 'Desktop' is named that because it's supposed to be like your real-life desk.",
-            "An 'Operating System' (like Windows or Android) is the main software that manages all the computer's parts.",
-        ];
+    // --- Computer History ---
+    "The first computer mouse was made of wood by Doug Engelbart in 1964.",
+    "The first 'computer bug' was a real moth found trapped in the Harvard Mark II computer in 1947.",
+    "The first 1 GIGABYTE (GB) hard drive was released in 1980, weighed 550 pounds, and cost $40,000.",
+    "Ada Lovelace is considered the world's first computer programmer for her work on Charles Babbage's Analytical Engine in the 1840s.",
+    "The first commercially successful portable computer, the 'Osborne 1', weighed 24.5 pounds (11.1 kg).",
+    "The 'QWERTY' keyboard layout was designed in 1873 to *slow down* typists and prevent typewriter keys from jamming.",
+    "The 'Ctrl' + 'Alt' + 'Delete' command was originally created by a programmer at IBM as a soft reboot and was never intended for public use.",
+    "The ENIAC, a computer built in 1945, weighed 27 tons and took up 1,800 square feet.",
+    "The first Apple computer, the 'Apple I', was sold as just a motherboard. The case, keyboard, and monitor were sold separately.",
+    "Microsoft's original name was 'Micro-Soft', a mix of 'micro-computer' and 'software'.",
+    
+    // --- Internet & Web History ---
+    "The first email was sent in 1971 by Ray Tomlinson, who also chose the '@' symbol to separate the user from the host.",
+    "The first website ever, 'info.cern.ch', was published by Tim Berners-Lee in 1991. It is still online today.",
+    "'ARPANET', the precursor to the modern internet, sent its first message in 1969. It was 'LO' (it was supposed to be 'LOGIN' but the system crashed).",
+    "The term 'spam' for unwanted email comes from a 1970 Monty Python sketch about the meat product 'Spam'.",
+    "The first item sold on eBay (then 'AuctionWeb') was a broken laser pointer for $14.83.",
+    "The first domain name ever registered was 'symbolics.com' on March 15, 1985.",
+    "Amazon.com was originally called 'Cadabra' (as in 'abracadabra'), but was changed because it sounded too much like 'cadaver'.",
+    "The first 'webcam' was invented at Cambridge University to monitor a coffee pot so people wouldn't walk down the hall for nothing.",
+    "Google's original name was 'Backrub', named for its ability to analyze the web's 'backlinks' to determine a site's importance.",
+    "The first YouTube video, 'Me at the zoo', was uploaded on April 23, 2005, by co-founder Jawed Karim.",
 
+    // --- Software & Programming ---
+    "The first computer programmer was a woman named Ada Lovelace.",
+    "'Wi-Fi' does not stand for 'Wireless Fidelity'. The name was a marketing term created to be catchy; it's just a brand name.",
+    "'Bluetooth' technology is named after a 10th-century Viking king, Harald Bluetooth, who united Danish tribes.",
+    "The 'cookie' (a small file stored by websites) was named after the 'magic cookie', a term for a packet of data a program receives and sends back unchanged.",
+    "The programming language 'Python' is named after the British comedy group 'Monty Python', not the snake.",
+    "A 'firewall' in computing is named after the real-world firewalls in construction, which are physical barriers to stop a fire from spreading.",
+    "Emojis (e-MO-jee) originated in Japan. The name means 'picture character' (e = picture, moji = character).",
+    "The 'Recycle Bin' on Windows was almost named the 'Dungeon'.",
+    "The original name for the 'Java' programming language was 'Oak', named after an oak tree outside the lead developer's office.",
+    "A 'bug' in a program is an error. 'Debugging' is the process of finding and fixing those errors.",
+    
+    // --- Hardware Facts ---
+    "An 'SSD' (Solid-State Drive) has no moving parts, which is why it is so much faster and more durable than an 'HDD' (Hard Disk Drive).",
+    "'Moore's Law' is an observation from 1965 that the number of transistors on a microchip doubles roughly every two years, (which has held true for decades).",
+    "The 'Caps Lock' key is a remnant from mechanical typewriters, where it was needed to physically lock the 'shift' key down.",
+    "A 'pixel' (the smallest dot on a screen) is short for 'Picture Element'.",
+    "The average smartphone today is thousands of times more powerful than the computers that sent the Apollo 11 astronauts to the moon.",
+    "The 3.5-inch 'floppy disk' (which was in a hard case) was invented in 1981. Its icon is still used for 'Save'.",
+    "The 'motherboard' is the main circuit board that connects all the computer's components, like a central nervous system.",
+    "The first computer to feature a 'mouse' and a 'graphical user interface' (GUI) was the Xerox Alto in 1973.",
+    "The liquid in 'LCD' (Liquid Crystal Display) screens is a special substance that can be made transparent or opaque by an electric current.",
+    "A 'CPU' (Central Processing Unit) can execute billions of instructions per second.",
+
+    // --- Internet & Data Stats ---
+    "Over 500 hours of video are uploaded to YouTube *every minute*.",
+    "More than 300 *billion* emails are sent and received worldwide *each day*.",
+    "The majority of all internet traffic (over 50%) is generated by automated 'bots', not humans.",
+    "A 'zettabyte' is 1,000 exabytes, or 1 billion terabytes. The total amount of data in the world is measured in zettabytes.",
+    "More people in the world have access to a mobile phone than to a working toilet.",
+    "The 'Deep Web' (parts of the internet not indexed by search engines) is estimated to be 400-500 times larger than the 'Surface Web' (the part you can Google).",
+    "'404 Error' (Page Not Found) is named after Room 404 at CERN, where the first web servers were allegedly located (though this is a popular myth).",
+    "The term 'surfing' the web was coined in 1992 by a librarian named Jean Armour Polly.",
+    "Over 60% of all web traffic now comes from mobile devices, not desktop computers.",
+    "The first banner ad on the web appeared in 1994 on HotWired.com.",
+    
+    // --- Modern Tech & AI ---
+    "'AI' (Artificial Intelligence) is a broad term. 'Machine Learning' is a *type* of AI that learns from data without being explicitly programmed.",
+    "The 'Turing Test' is a test of a machine's ability to exhibit intelligent behavior indistinguishable from that of a human.",
+    "'Phishing' is a scam where hackers 'fish' for your passwords by sending fake, but legitimate-looking, emails.",
+    "A 'botnet' is a network of 'zombie' computers that have been infected with malware and are controlled by a single hacker.",
+    "'Cloud computing' just means storing and accessing data and programs over the internet instead of on your computer's local hard drive.",
+    "'GPS' (Global Positioning System) is a service owned by the U.S. government and is provided for free to the world.",
+    "A 'QR Code' stands for 'Quick Response Code'. It's a two-dimensional barcode that can be read by a camera.",
+    "The 'Internet of Things' (IoT) refers to physical devices (like smart lights, fridges, and watches) that are connected to the internet.",
+    "'Bitcoin', a type of 'cryptocurrency', is based on a technology called 'blockchain', which is a decentralized, public ledger.",
+    "'Open-source' software (like Linux or Firefox) is software with source code that anyone can inspect, modify, and share.",
+    
+    // --- More Quirky Facts ---
+    "The sound of a 'dial-up' modem was the noise of two computers 'handshaking' (negotiating the connection) over a phone line.",
+    "The first Apple logo wasn't the apple. It was a complex drawing of Sir Isaac Newton sitting under an apple tree.",
+    "The term 'podcast' is a blend of 'iPod' (Apple's music player) and 'broadcast'.",
+    "The computer company 'HP' (Hewlett-Packard) was started in a garage in Palo Alto, California, in 1939.",
+    "'Nintendo', the video game company, was founded in 1889 as a playing card company.",
+    "The most-watched video on YouTube is a children's song: 'Baby Shark Dance'.",
+    "The 'ASUS' computer company is named after 'Pegasus', the winged horse from Greek mythology.",
+    "The 'dongle' (a small device that plugs into a port) is a word that was just 'made up' in the 1980s to describe a security key.",
+    "The first text message ('SMS') ever sent, in 1992, said 'Merry Christmas'.",
+    "'CAPTCHA' (the 'I'm not a robot' tests) stands for 'Completely Automated Public Turing test to tell Computers and Humans Apart'.",
+    "The average person blinks less often when looking at a computer screen.",
+    "The 'Intel 4004', released in 1971, was the first commercially available microprocessor (a 'computer on a chip').",
+    "The 'File' icon in Windows 95 was designed to look like a 'file cabinet', not a 'file folder'.",
+    "The company 'Nokia' (once famous for phones) started in 1865 as a wood pulp mill in Finland.",
+    "'Sony's' first product was an electric rice cooker in 1945, which mostly just burned rice.",
+    "The 'P' in 'JPEG' (a common image format) stands for 'Photographic'. (Joint Photographic Experts Group).",
+    "The 'M' in 'MP3' (a common audio format) stands for 'Moving'. (MPEG-1 Audio Layer 3).",
+    "The 'G' in 'GIF' (a common image format) stands for 'Graphics'. (Graphics Interchange Format).",
+    "There is a debate on how to pronounce 'GIF'. The creator, Steve Wilhite, says it's a soft 'G' (like 'Jif').",
+    "'Google' rents out goats to 'mow' the lawns at its headquarters. (It's quieter and more environmentally friendly).",
+    "The original 'Solitaire' and 'Minesweeper' games were included with Windows to teach people how to 'drag-and-drop' and use a mouse.",
+    "The term 'blog' is short for 'weblog'.",
+    "The '&' (ampersand) symbol is a 'ligature', or a combination of the letters 'e' and 't', which is 'et', the Latin word for 'and'.",
+    "The 'pound' or 'hashtag' symbol '#' is technically called an 'octothorpe'.",
+    "The first 'emoticon' (a text-based face) was ':-)' and was proposed in 1982 to mark jokes in a message board.",
+    "The concept of 'hyperlinks' (clicking text to go to another page) was first described in 1945 by Vannevar Bush.",
+    "'Wikipedia' is a 'wiki', which is a Hawaiian word meaning 'quick'. A wiki is a website that allows collaborative editing.",
+    "The 'cut', 'copy', and 'paste' commands were invented by Larry Tesler, who was trying to make computers more user-friendly.",
+    "About 1 in 10 Europeans are conceived in a bed that was purchased from 'IKEA'. (This is a famous, but hard to verify, 'IKEA' stat).",
+    "The average computer user's password is '123456'.",
+    "The original 'Doom' (1993) video game was installed on more computers than Microsoft Windows 95.",
+    "The 'Page Up' and 'Page Down' keys exist because early screens couldn't scroll smoothly; they could only load one 'page' of text at a time.",
+    "The first 'laptop' (the GRiD Compass) was used on the Space Shuttle in 1983.",
+    "The first live-stream on the internet was of a coffee pot (the 'Trojan Room coffee pot').",
+    "The 'G' in '5G' (for mobile networks) stands for 'Generation'.",
+    "'Data' is the plural of 'datum', a Latin word meaning 'something given'.",
+    "The 'Android' operating system's green robot mascot is named 'Bugdroid'.",
+    "The first 'app store' was not Apple's. It was created in 1997 for Linux and was called the 'Debian Software Store'.",
+    "'Samsung' means 'three stars' in Korean. The name was chosen to represent a company that would be 'big, strong, and everlasting'.",
+    "The '@' sign is called the 'snail' in Italian ('chiocciola'), the 'monkey's tail' in Dutch ('apenstaartje'), and the 'pig's ear' in German ('Klammeraffe')."
+];
         const quizData = [
   {
     title: "Module 1: Computer Fundamentals",
@@ -3388,10 +3531,13 @@
   }
 ];
 
+
         // ---------------------------------------------------
-        // 2. DOM ELEMENTS
+        // 2. DOM ELEMENTS (Added welcome view elements)
         // ---------------------------------------------------
         const views = document.querySelectorAll('.view');
+        const firstWelcomeView = document.getElementById('first-welcome-view'); // ADDED
+        const startExploringBtn = document.getElementById('start-exploring-btn'); // ADDED
         const homeView = document.getElementById('home-view');
         const cooldownView = document.getElementById('cooldown-view');
         const moduleSelectView = document.getElementById('module-select-view');
@@ -3412,7 +3558,7 @@
         const themeButtons = document.querySelectorAll('.theme-btn');
 
         // ---------------------------------------------------
-        // 3. STATE VARIABLES
+        // 3. STATE VARIABLES (Added isFirstLaunch)
         // ---------------------------------------------------
         let db; 
         let sessionXP = 0;
@@ -3422,10 +3568,9 @@
         let currentModule = null;
         let currentQuestionIndex = 0;
         const COOLDOWN_PERIOD = 24 * 60 * 60 * 1000; 
-        // const COOLDOWN_PERIOD = 30000; // Testing
 
         // ---------------------------------------------------
-        // 4. CORE FUNCTIONS
+        // 4. CORE FUNCTIONS (Added confetti, modified loadData)
         // ---------------------------------------------------
 
         function showView(viewId) {
@@ -3434,57 +3579,65 @@
             if (viewToShow) { viewToShow.style.display = 'block'; }
         }
 
+        // --- MODIFIED loadData ---
         function loadData() {
             const data = localStorage.getItem('digitalExplorerDB');
-            if (data) { db = JSON.parse(data); } 
-            else {
+            if (data) { 
+                db = JSON.parse(data); 
+                // ADDED: Check if isFirstLaunch flag exists
+                if (db.isFirstLaunch === undefined) {
+                    db.isFirstLaunch = true; 
+                }
+            } else {
+                // First time ever opening
                 db = {
                     xp: 0, lastSessionTime: 0, currentTheme: 'theme-default',
-                    themeMode: 'light', // ADDED themeMode
-                    unlockedThemes: ['theme-default'], progress: {}
+                    themeMode: 'light', 
+                    unlockedThemes: ['theme-default'], progress: {},
+                    isFirstLaunch: true // ADDED: Set flag on initial creation
                 };
             }
-             // ADDED: Ensure themeMode exists for older save data
+            // Ensure themeMode exists even if loading old data
             if (!db.themeMode) { db.themeMode = 'light'; }
-            saveData();
+            // Don't save immediately - wait until after potential welcome screen
         }
+        // --- END loadData modification ---
 
         function saveData() {
             localStorage.setItem('digitalExplorerDB', JSON.stringify(db));
         }
 
+        // --- MODIFIED updateUI ---
         function updateUI() {
-             // Apply color theme
-            document.body.className = db.currentTheme;
-
-            // Apply dark/light mode
+            document.body.className = db.currentTheme; // Apply color theme first
             const toggleBtn = document.getElementById('theme-toggle-btn');
+            // Then apply dark/light mode
             if (db.themeMode === 'dark') {
                 document.body.classList.add('theme-dark');
-                toggleBtn.textContent = '☀️'; // Sun icon for dark mode
+                toggleBtn.textContent = '☀️'; 
             } else {
                 document.body.classList.remove('theme-dark');
-                toggleBtn.textContent = '🌙'; // Moon icon for light mode
+                toggleBtn.textContent = '🌙'; 
             }
             
             xpValue.textContent = db.xp;
             
+            // Update theme locks
             themeButtons.forEach(btn => {
                 const xpRequired = parseInt(btn.dataset.xp || '0', 10);
                 if (db.xp >= xpRequired) {
                     btn.classList.remove('locked');
                     if (!db.unlockedThemes.includes(btn.id)) {
                         db.unlockedThemes.push(btn.id);
-                        // No need to save here, will be saved on theme change or exit
                     }
                 } else {
-                    // Ensure buttons for themes not yet earned are locked
-                    if (btn.id !== 'theme-default') { // Keep default always unlocked
+                     if (btn.id !== 'theme-default') { 
                        btn.classList.add('locked');
                     }
                 }
             });
         }
+         // --- END updateUI modification ---
 
 
         function displayDailyFact() {
@@ -3504,20 +3657,20 @@
         function checkSessionCooldown() {
             const now = Date.now();
             const timePassed = now - db.lastSessionTime;
-            if (timePassed < COOLDOWN_PERIOD && db.lastSessionTime !== 0) { // Added check for initial load
+            if (timePassed < COOLDOWN_PERIOD && db.lastSessionTime !== 0) { 
                 showView('cooldown-view');
                 document.querySelector('.stamina-container').style.visibility = 'hidden';
             } else {
                 showView('home-view');
                 document.querySelector('.stamina-container').style.visibility = 'visible';
-                sessionTimeLeft = totalSessionTime; // Reset timer display value
-                updateTimerDisplay(); // Ensure bar is full on home screen
+                sessionTimeLeft = totalSessionTime; 
+                updateTimerDisplay(); 
             }
         }
 
 
         function startSession() {
-            if (!quizData || quizData.length === 0) {
+            if (!quizData || quizData.length === 0 || quizData.every(m => !m.questions || m.questions.length === 0)) { // Check if ALL modules are empty too
                  alert("No questions found! Please add modules and questions.");
                  return;
             }
@@ -3545,12 +3698,12 @@
         }
         
         function updateTimerDisplay() {
-            const percentage = Math.max(0, (sessionTimeLeft / totalSessionTime) * 100); // Prevent negative width
+            const percentage = Math.max(0, (sessionTimeLeft / totalSessionTime) * 100); 
             staminaBar.style.width = percentage + '%';
             if (percentage < 20) { staminaBar.style.backgroundColor = 'var(--error-color)'; } 
             else if (percentage < 50) { staminaBar.style.backgroundColor = '#ffc107'; } 
             else { staminaBar.style.backgroundColor = 'var(--stamina-bar-color)'; }
-            const minutes = Math.floor(Math.max(0, sessionTimeLeft) / 60); // Prevent negative time
+            const minutes = Math.floor(Math.max(0, sessionTimeLeft) / 60); 
             const seconds = Math.max(0, sessionTimeLeft) % 60;
             staminaText.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
         }
@@ -3565,7 +3718,6 @@
                 const btn = document.createElement('button');
                 btn.className = 'btn module-btn';
                 const moduleProgress = db.progress[module.title] || 0;
-                 // Ensure questions exist before calculating progress
                 const totalQuestions = (module.questions && module.questions.length) ? module.questions.length : 0;
                 let progressText = `(0/${totalQuestions})`;
 
@@ -3588,7 +3740,6 @@
         
         function selectModule(moduleIndex) {
             currentModule = quizData[moduleIndex];
-             // Add check for empty questions array
             if (!currentModule.questions || currentModule.questions.length === 0) {
                 alert("This module has no questions yet!");
                 return; 
@@ -3603,14 +3754,13 @@
         }
         
         function loadQuestion() {
-             // More robust check
             if (!currentModule || !currentModule.questions || currentModule.questions.length === 0 || currentQuestionIndex >= currentModule.questions.length) {
-                 if (currentModule && currentModule.questions && currentModule.questions.length > 0) { // Only mark complete if it has questions & was finished
+                 if (currentModule && currentModule.questions && currentModule.questions.length > 0 && currentQuestionIndex >= currentModule.questions.length) { 
                     db.progress[currentModule.title] = currentModule.questions.length;
                     saveData();
                     alert("Module Complete! Great job!");
                 }
-                populateModuleList(); // Go back to list
+                populateModuleList(); 
                 showView('module-select-view');
                 return;
             }
@@ -3619,7 +3769,7 @@
             questionText.textContent = q.q;
             optionsContainer.innerHTML = '';
             feedbackArea.style.display = 'none';
-            feedbackArea.className = ''; // Reset feedback styling
+            feedbackArea.className = ''; 
             nextQBtn.style.display = 'none';
             q.options.forEach((option, i) => {
                 const btn = document.createElement('button');
@@ -3635,7 +3785,7 @@
             if (selectedIndex === correctIndex) {
                 clickedButton.classList.add('correct');
                 feedbackArea.innerHTML = "<strong>Correct!</strong> Great job!";
-                 feedbackArea.className = 'correct-feedback'; // Use class
+                 feedbackArea.className = 'correct-feedback'; 
                 if (currentQuestionIndex === (db.progress[currentModule.title] || 0)) {
                     db.xp += 10;
                     sessionXP += 10;
@@ -3647,7 +3797,7 @@
                 clickedButton.classList.add('incorrect');
                 optionsContainer.children[correctIndex].classList.add('correct');
                 feedbackArea.innerHTML = `<strong>Not quite.</strong> ${explanation}`;
-                feedbackArea.className = 'incorrect-feedback'; // Use class
+                feedbackArea.className = 'incorrect-feedback'; 
             }
             feedbackArea.style.display = 'block';
             nextQBtn.style.display = 'block';
@@ -3656,7 +3806,7 @@
         function changeTheme(themeId) {
             if (db.unlockedThemes.includes(themeId)) {
                 db.currentTheme = themeId;
-                updateUI(); // Applies theme and dark mode class
+                updateUI(); 
                 saveData();
             } else {
                 const btn = document.getElementById(themeId);
@@ -3665,29 +3815,73 @@
             }
         }
 
+        // --- ADDED: Confetti Function ---
+        function launchConfetti() {
+            const confettiCount = 100;
+            const body = document.body;
+            for (let i = 0; i < confettiCount; i++) {
+                const confetti = document.createElement('div');
+                confetti.classList.add('confetti');
+                
+                confetti.style.left = Math.random() * 100 + 'vw';
+                const colorVar = `--confetti-color-${Math.floor(Math.random() * 7) + 1}`;
+                confetti.style.backgroundColor = getComputedStyle(body).getPropertyValue(colorVar);
+                
+                const size = Math.random() * 5 + 5; 
+                confetti.style.width = size + 'px';
+                confetti.style.height = size + 'px';
+                 confetti.style.transform = `rotate(${Math.random() * 360}deg)`;
+
+                const duration = Math.random() * 3 + 4; 
+                const delay = Math.random() * 2; 
+                confetti.style.animation = `confetti-fall ${duration}s linear ${delay}s forwards`;
+                
+                body.appendChild(confetti);
+
+                confetti.addEventListener('animationend', () => {
+                    confetti.remove();
+                });
+            }
+        }
+        // --- End of Confetti Function ---
+
+
         // ---------------------------------------------------
-        // 5. EVENT LISTENERS
+        // 5. EVENT LISTENERS (Modified DOMContentLoaded)
         // ---------------------------------------------------
         document.addEventListener('DOMContentLoaded', () => {
-            loadData();
-            updateUI();
-            displayDailyFact();
-            checkSessionCooldown(); 
+            loadData(); // Load db, checks for isFirstLaunch
+            updateUI(); // Apply theme/mode first
             
-            // ADDED: Home title link listener
+            // --- MODIFIED: Show welcome or normal view ---
+            if (db.isFirstLaunch === true) {
+                showView('first-welcome-view');
+                launchConfetti(); 
+                db.isFirstLaunch = false; // Set flag to false *before* saving
+                saveData(); // Save immediately so it doesn't show again
+            } else {
+                displayDailyFact(); // Only display fact on normal launch
+                checkSessionCooldown(); // Show home or cooldown view
+            }
+            // --- End of modification ---
+
+            // ADDED: Listener for the welcome screen button
+            startExploringBtn.addEventListener('click', () => {
+                displayDailyFact(); // Display fact after welcome
+                checkSessionCooldown(); // Proceed to normal view
+            });
+            
+            // Added link listener
             document.getElementById('home-title-link').addEventListener('click', (e) => {
-                 e.preventDefault(); // Prevent default anchor behavior
-                 if (timerInterval) { // If in a session, go to module select
-                    showView('module-select-view');
-                 } else { // Otherwise go to home/cooldown
-                    checkSessionCooldown();
-                 }
+                 e.preventDefault(); 
+                 if (timerInterval) { showView('module-select-view'); } 
+                 else { checkSessionCooldown(); }
             });
 
-            // ADDED: Theme toggle button listener
+            // Added theme toggle listener
              document.getElementById('theme-toggle-btn').addEventListener('click', () => {
                  db.themeMode = (db.themeMode === 'light') ? 'dark' : 'light';
-                 updateUI(); // Applies class and changes icon
+                 updateUI(); 
                  saveData();
             });
 
